@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Take me home with you</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("CatManagement", []);
+  
+        //Controller Part
+        app.controller("CatManagementController", function ($scope, $http) {
+  
+          //Initialize page with default data which is blank in this example
+          $scope.Cats = [];
+  
+          $scope.form = {
+            name: ""
+          };
+  
+          //Now load the data from server
+          _refreshPageData();
+
+          //HTTP POST methods for add Cats
+          $scope.adopt = function () {
+            var data = { "name": $scope.form.name, "photo": $scope.form.photo };
+
+            $http({
+              method: "POST",
+              url: '/cats',
+              data: angular.toJson(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(_success, _error);
+          };
+          $scope.skip = function () {
+              _refreshPageData();
+          };
+  
+          /* Private Methods */
+          //HTTP GET - get all Cats collection
+          function _refreshPageData() {
+            $http({
+              method: 'GET',
+              url: '/cats'
+            }).then(function successCallback(response) {
+              $scope.form.name = response.data.name;
+              $scope.form.photo = response.data.photo;
+            }, function errorCallback(response) {
+              console.log(response.statusText);
+            });
+            $http({
+              method: 'GET',
+              url: '/list'
+            }).then(function successCallback(response) {
+              $scope.Cats = response.data;
+            }, function errorCallback(response) {
+              console.log(response.statusText);
+            });
+          }
+  
+          function _success(response) {
+            _refreshPageData();
+            _clearForm();
+          }
+  
+          function _error(response) {
+            alert(response.data.message || response.statusText);
+          }
+  
+          //Clear the form
+          function _clearForm() {
+            $scope.form.name = "";
+          }
+        });
+    </script>
+</head>
+<body ng-app="CatManagement" ng-controller="CatManagementController">
+
+<div class="container">
+    <h1>Take me home</h1>
+
+    <h3>Adopt this beautiful ball of fur</h3>
+    <form>
+        <div class="row">
+            <div class="col-6"><img style="max-height:200px" src="{{ form.photo }}"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6">{{form.name}}</div>
+        </div>
+        <button class="btn" ng-click="adopt()">YES!</button>
+        <button class="btn" ng-click="skip()">I'm an insensible monster</button>
+    </form>
+
+    <h3>Adopted cats</h3>
+    <div class="row">
+        <div class="col-4">Name</div>
+    </div>
+    <div class="row" ng-repeat="Cat in Cats">
+        <div class="row">
+            <div class="col-8"><img style="max-height:200px" src="{{ Cat.photo }}"/></div>
+        </div>
+        <div class="row">
+            <div class="col-8">{{ Cat.name }}</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

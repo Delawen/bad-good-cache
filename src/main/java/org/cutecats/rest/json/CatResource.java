@@ -1,0 +1,40 @@
+package org.cutecats.rest.json;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+
+import java.util.Set;
+
+@Path("/cats")
+public class CatResource {
+
+	@Inject
+	CatStorage cats;
+
+	@Inject
+	CatNameGenerator catNameGenerator;
+
+	public CatResource() {
+	}
+
+	@GET
+	public Cat newRandomCat() {
+		Cat cat = new Cat(catNameGenerator.getName(), (new CatPhotoGenerator()).getCatURLImage());
+		return cat;
+	}
+
+	@POST
+	public Set<Cat> add(Cat cat) {
+		cats.add(cat);
+		return cats;
+	}
+
+	@DELETE
+	public Set<Cat> delete(Cat cat) {
+		cats.removeIf(existingCat -> existingCat.name.contentEquals(cat.name));
+		return cats;
+	}
+}
