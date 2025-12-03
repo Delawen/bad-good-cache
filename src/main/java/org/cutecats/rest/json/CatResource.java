@@ -31,9 +31,4 @@ public class CatResource {
 		return cats;
 	}
 
-	@DELETE
-	public Set<Cat> delete(Cat cat) {
-		cats.removeIf(existingCat -> existingCat.name.contentEquals(cat.name));
-		return cats;
-	}
 }
