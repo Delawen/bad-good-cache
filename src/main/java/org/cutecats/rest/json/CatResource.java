@@ -22,8 +22,7 @@ public class CatResource {
 
 	@GET
 	public Cat newRandomCat() {
-		Cat cat = new Cat(catNameGenerator.getName(), (new CatPhotoGenerator()).getCatURLImage());
-		return cat;
+		return new Cat(catNameGenerator.getName(), (new CatPhotoGenerator()).getCatURLImage());
 	}
 
 	@POST
