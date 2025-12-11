@@ -1,10 +1,11 @@
 package org.cutecats.rest.json;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 
 import java.util.Set;
 
@@ -21,8 +22,14 @@ public class CatResource {
 	}
 
 	@GET
-	public Cat newRandomCat() {
-		return new Cat(catNameGenerator.getName(), (new CatPhotoGenerator()).getCatURLImage());
+	public Cat newRandomCat(@QueryParam("test") @DefaultValue("true") Boolean test) {
+		String url;
+		if(test) {
+			url = (new DummyPhotoGenerator()).getURLImage();
+		} else {
+			url = (new CatPhotoGenerator()).getCatURLImage();
+		}
+		return new Cat(catNameGenerator.getName(), url);
 	}
 
 	@POST

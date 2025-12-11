@@ -44,7 +44,7 @@
           function _refreshPageData() {
             $http({
               method: 'GET',
-              url: '/cats'
+              url: '/cats?test=false'
             }).then(function successCallback(response) {
               $scope.form.name = response.data.name;
               $scope.form.photo = response.data.photo;
