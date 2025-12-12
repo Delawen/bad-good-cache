@@ -1,20 +1,18 @@
 package org.cutecats.rest.json;
 
-import io.quarkus.test.junit.QuarkusIntegrationTest;
-import org.junit.jupiter.api.RepeatedTest;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
 import static io.restassured.RestAssured.given;
 
-@QuarkusIntegrationTest
+@QuarkusTest
 class CatResourceTest {
 
 
-	//Do not start enabled
-	//@RepeatedTest(10000)
+	@Test
 	void newRandomCat() {
 		given()
-				//Remember, test=false because we are generating the cache, not testing
-				//this must be as close to production as possible
-				.when().get("/cats?test=false")
+				.when().get("/cats")
 				.then()
 				.statusCode(200);
 	}
